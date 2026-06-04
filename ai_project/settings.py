@@ -12,7 +12,7 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = config("DEBUG", default=True, cast=bool)
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 if not DEBUG:
     ALLOWED_HOSTS += [
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -77,15 +78,12 @@ WSGI_APPLICATION = "ai_project.wsgi.application"
 # -------------------------------------------------
 # Database
 # -------------------------------------------------
+import dj_database_url
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME"),
-        "USER": config("DB_USER"),
-        "PASSWORD": config("DB_PASSWORD"),
-        "HOST": config("DB_HOST"),
-        "PORT": config("DB_PORT"),
-    }
+    "default": dj_database_url.config(
+        default=config("DATABASE_URL")
+    )
 }
 
 # -------------------------------------------------
@@ -123,6 +121,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",  
     "https://www.pclinfotech.com",
     "https://pclinfotech.com",
+        # 🔥 ADD YOUR VERCEL FRONTEND DOMAIN
+    "https://ai-frontend.vercel.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -131,6 +131,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173", 
     "https://www.pclinfotech.com",
     "https://pclinfotech.com",
+        "https://ai-frontend.vercel.app",
 ]
 
 
