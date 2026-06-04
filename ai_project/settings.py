@@ -8,7 +8,7 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 DEBUG = config("DEBUG", default=True, cast=bool)
 
@@ -79,10 +79,12 @@ WSGI_APPLICATION = "ai_project.wsgi.application"
 # Database
 # -------------------------------------------------
 import dj_database_url
+import os
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=config("DATABASE_URL")
+        default=os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3"),
+        conn_max_age=600
     )
 }
 
@@ -180,9 +182,8 @@ LOGGING = {
     },
 }
 
-RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
-RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
-
+RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='')
+RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET', default='')
 if DEBUG:
     SECURE_SSL_REDIRECT = False
     CSRF_COOKIE_SECURE = False
@@ -198,30 +199,6 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
-
-
-# -------------------------------------------------
-# Email Configuration (Brevo via Anymail)
-# -------------------------------------------------
-# Email settings (Gmail SMTP)
-# settings.py
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = False       # SSL, not TLS
-EMAIL_USE_SSL = True
-EMAIL_PORT = 465
-# -------------------------------------------------
-# Email Configuration (Gmail SMTP)
-# -------------------------------------------------
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_USE_TLS = False
-
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 
 # settings.py
 
