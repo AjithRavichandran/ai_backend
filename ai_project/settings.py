@@ -1,7 +1,7 @@
 """
 Django settings for ai_project project.
 """
-
+import os
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
@@ -83,7 +83,7 @@ import os
 
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3"),
+        default=config("DATABASE_URL", default=None),
         conn_max_age=600
     )
 }
